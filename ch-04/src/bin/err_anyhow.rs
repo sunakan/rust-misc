@@ -15,7 +15,7 @@ fn get_int_from_file() -> Result<i32> {
     num_str
         .trim()
         .parse::<i32>()
-        .map(|t| t*2)
+        .map(|t| t * 2)
         .context("Stringのパースに失敗")
 }
 

@@ -1,5 +1,5 @@
-use std::path::PathBuf;
 use anyhow::{bail, ensure, Context, Result};
+use std::path::PathBuf;
 
 use clap::Clap;
 use std::fs::File;
@@ -86,7 +86,7 @@ impl RpnCalculator {
 }
 
 #[cfg(test)]
-mod  tests {
+mod tests {
     use super::*;
     #[test]
     fn test_ok() {
