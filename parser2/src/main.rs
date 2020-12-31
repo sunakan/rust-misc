@@ -1,51 +1,29 @@
 extern crate nom;
-use nom::{
-    bytes::complete::{tag, take_while_m_n},
-    combinator::map_res,
-    sequence::tuple,
-    IResult,
-};
 
-#[derive(Debug, PartialEq)]
-pub struct Color {
-    pub red: u8,
-    pub green: u8,
-    pub blue: u8,
+use std::collections::HashMap;
+use nom::IResult;
+
+pub enum JsonValue {
+  Str(String),
+//  Boolean(bool),
+//  Num(f64),
+//  Array(Vec<JsonValue>),
+//  Object(HashMap<String, JsonValue>),
 }
 
-fn from_hex(input: &str) -> Result<u8, std::num::ParseIntError> {
-    u8::from_str_radix(input, 16)
-}
-
-fn is_hex_digit(c: char) -> bool {
-    c.is_digit(16)
-}
-
-fn hex_primary(input: &str) -> IResult<&str, u8> {
-    // take_while_m_n(min, max, condition) は，
-    // 入力列の各要素に対しconditionを適用し，それがtrueを返した回数が[min..max]に含まれるかどうか判別する．
-    // map_res(parser, f) は，parserの返す値に関数fを適用して返す．
-    // 今回はtake_while_m_nが二桁の16進数(の文字列)を返すはずなので，それに対してfrom_hexを適用し，u8型を返すという感じ．
-    map_res(take_while_m_n(2, 2, is_hex_digit), from_hex)(input)
-}
-
-fn hex_color(input: &str) -> IResult<&str, Color> {
-    // tag() はシンプルに引数のパターンと合致するかチェック．
-    let (input, _) = tag("#")(input)?;
-    let (input, (red, green, blue)) = tuple((hex_primary, hex_primary, hex_primary))(input)?;
-    Ok((input, Color { red, green, blue }))
+fn parse(s: &str) -> IResult<&str, JsonValue> {
+  string()
 }
 
 fn main() {
-    assert_eq!(
-        hex_color("#2F14DF"),
-        Ok((
-            "",
-            Color {
-                red: 47,
-                green: 20,
-                blue: 223,
-            }
-        ))
-    );
+  let data = r#"
+  {
+    "a"  : -42,
+    "b": [ "x", "y", 12 ] ,
+    "c": { "hello" : "world", "a" : -3.14 },
+    "d"  : true,
+    "e"  : [{ "good" : "day" }, -1, 2]
+  }"#;
+  let data = r#""hello""#;
+  println!("{}", data);
 }
